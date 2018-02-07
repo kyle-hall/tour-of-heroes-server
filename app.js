@@ -21,6 +21,7 @@ app.use(bodyParser.json())
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, PUT")
   next();
 });
 
@@ -33,12 +34,15 @@ app.get('/heroes', (req, res) => {
 });
 
 app.get('/heroes/:id', (req, res) => {
-  console.log(`getting the hero by id ${req.params.id}`);
-  res.send(heroes.find(hero => hero.id === req.params.id));
+  const requestedHero = heroes.find(hero => hero.id == req.params.id) || {}
+  res.send(requestedHero);
 });
 
 app.put('/heroes', (req, res) => {
-  heroes = heroes.map(hero => hero.id === req.body.hero.id ? req.body.hero : hero);
+  heroes = heroes.map(hero => {
+    return hero.id === req.body.id ? req.body : hero
+  });
+  res.send();
 });
 
 app.listen(3000, () => {
